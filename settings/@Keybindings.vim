@@ -120,19 +120,19 @@ nmap <silent> <leader>sc :close<CR>
 " Use Leader direction to move to or create new splits.
 " ---------------
 
-function! WinMove(key) 
+function! WinMove(key)
   let t:curwin = winnr()
   exec "wincmd ".a:key
   if (t:curwin == winnr()) "we havent moved
     if (match(a:key,'[jk]')) "were we going up/down
       wincmd v
-    else 
+    else
       wincmd s
     endif
     exec "wincmd ".a:key
   endif
 endfunction
- 
+
 map <leader>h              :call WinMove('h')<cr>
 map <leader>k              :call WinMove('k')<cr>
 map <leader>l              :call WinMove('l')<cr>
@@ -156,8 +156,21 @@ nmap <down>  :3wincmd -<cr>
 " ---------------
 " Fix Trailing White Space
 " ---------------
-map <leader>ws :%s/\s\+$//e<CR>
-command! FixTrailingWhiteSpace :%s/\s\+$//e
+"From http://vimcasts.org/episodes/tidying-whitespace/
+"Preserves/Saves the state, executes a command, and returns to the saved state
+function! Preserve(command)
+  " Preparation: save last search, and cursor position.
+  let _s=@/
+  let l = line(".")
+  let c = col(".")
+  " Do the business:
+  execute a:command
+  " Clean up: restore previous search history, and cursor position
+  let @/=_s
+  call cursor(l, c)
+endfunction
+"strip all trailing white space
+nnoremap <silent> <leader>ws  :call Preserve("%s/\\s\\+$//e")<CR>
 
 " ---------------
 " Quick spelling fix (first item in z= list)
