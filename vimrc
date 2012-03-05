@@ -22,6 +22,7 @@ silent! Bundle 'gmarik/vundle'
 
 " Edit VundlePackages.vim to add new plugins.
 source ~/.vim/settings/@Packages.vim
+source ~/.vim/custom/@CustomPackages.vim
 
 filetype plugin indent on  " Automatically detect file types. (must turn on after Vundle)
 
@@ -232,5 +233,9 @@ endif
 " ----------------------------------------
 " For some reason the autoloading in /plugin wasnt working properly so:
 for f in split(glob('~/.vim/settings/*.vim'), '\n')
+  exe 'source' f
+endfor
+" Allow others to add their own customizations outside of my /settings/
+for f in split(glob('~/.vim/custom/*.vim'), '\n')
   exe 'source' f
 endfor
