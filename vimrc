@@ -11,7 +11,7 @@ silent! call vundle#rc()
 
 " Set leader to ,
 " Note: This line MUST come before any <leader> mappings
- let mapleader=","
+let mapleader=","
 
 " ----------------------------------------
 " Vundle
@@ -24,7 +24,8 @@ silent! Bundle 'gmarik/vundle'
 source ~/.vim/settings/@Packages.vim
 source ~/.vim/custom/@CustomPackages.vim
 
-filetype plugin indent on  " Automatically detect file types. (must turn on after Vundle)
+" Automatically detect file types. (must turn on after Vundle)
+filetype plugin indent on
 
 " ----------------------------------------
 " Platform Specific Configuration
@@ -45,10 +46,9 @@ if has('win32') || has('win64')
   cd ~
 elseif has('gui_macvim')
   " MacVim
-
   " Custom Inconsola-dz font for Powerline
   " From: https://github.com/Lokaltog/vim-powerline/wiki/Patched-fonts
-  set guifont=Inconsola-dz\ for\ Powerline:h12
+  set guifont=Inconsola-dz\ for\ Powerline:h14
 
   " Hide Toolbar in MacVim
   if has("gui_running")
@@ -68,13 +68,12 @@ endif
 " ---------------
 set t_Co=256
 set background=dark
-"" Solarized color options for iTerm2
-let g:solarized_termcolors=16
+" Solarized color options for iTerm2
+" let g:solarized_termcolors=16
 
 silent! colorscheme jellybeans
 " colorscheme molokai
 " colorscheme solarized
-
 
 " ---------------
 " Backups
@@ -88,19 +87,24 @@ set directory=~/.vim/tmp
 " --------------
 set undodir=~/.vim/undo
 set undofile
-set undolevels=1000 "maximum number of changes that can be undone
+set undolevels=1000  "maximum number of changes that can be undone
 set undoreload=10000 "maximum number lines to save for undo on a buffer reload"
 
 " ---------------
 " UI
 " ---------------
-set ruler  " Ruler on
-set nu  " Line numbers on
-set nowrap  " Line wrapping off
+set ruler         " Ruler on
+set nu            " Line numbers on
+set nowrap        " Line wrapping off
 set laststatus=2  " Always show the statusline
 set cmdheight=1
 set encoding=utf-8
-set colorcolumn=81
+set shortmess+=I
+" Make currently selected split as large as possible while allowing other
+" splits to maintain a height of at least five.
+" set winheight=5
+" set winminheight=5
+" set winheight=999
 
 " ---------------
 " Behaviors
@@ -114,16 +118,19 @@ set cf                 " Enable error files & error jumping.
 set clipboard+=unnamed " Yanks go on clipboard instead.
 set autowrite          " Writes on make/shell commands
 set timeoutlen=350     " Time to wait for a command (after leader for example)
+set foldmethod=syntax  " Fold on syntax for ruby support.
 set foldlevelstart=99  " Remove folds
 set formatoptions=crql
 set scrolloff=5        " start scrolling when within 5 lines near the top/bottom
+set sidescrolloff=10   " start scrolling when within 10 characters of the left/right
+set sidescroll=1       " scroll to left/right one column at a time.
 set virtualedit+=block " allow freeform selection (i.e. ignoring line endings) in visual block mode
 
 " ---------------
 " Text Format
 " ---------------
 set tabstop=2
-set backspace=2 " Delete everything with backspace
+set backspace=2   " Delete everything with backspace
 set shiftwidth=2  " Tabs under smart indent
 set cindent
 set autoindent
@@ -138,7 +145,7 @@ set showbreak=↪
 " Searching
 " ---------------
 set ignorecase " Case insensitive search
-set smartcase " Non-case sensitive search
+set smartcase  " Non-case sensitive search
 set incsearch
 set hlsearch
 
@@ -156,7 +163,7 @@ set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
 
 " Ignore bundler and sass cache
 set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*,
-               \*.lock
+      \*.lock
 
 " Disable temp and backup files
 set wildignore+=*.swp,*~,._*,.DS_Store,*/.vim/undo/*
@@ -164,7 +171,7 @@ set wildignore+=*.swp,*~,._*,.DS_Store,*/.vim/undo/*
 " ---------------
 " Visual
 " ---------------
-set showmatch  " Show matching brackets.
+set showmatch   " Show matching brackets.
 set matchtime=2 " How many tenths of a second to blink
 
 " ---------------
@@ -178,7 +185,7 @@ set t_vb=
 " Mouse
 " ---------------
 set mousehide  " Hide mouse after chars typed
-set mouse=a  " Mouse in all modes
+set mouse=a    " Mouse in all modes
 
 " Better complete options to speed it up
 set complete=.,w,b,u,U
@@ -187,28 +194,54 @@ set complete=.,w,b,u,U
 " Auto Commands
 " ----------------------------------------
 
-" Only have cursorline in active window.
-au WinEnter * setlocal cursorline
-au WinLeave * setlocal nocursorline
-
 if has("autocmd")
-  " No formatting on o key newlines
-  autocmd BufNewFile,BufEnter * set formatoptions-=o
+  augroup autocommands
+    autocmd!
 
-  " No more complaining about untitled documents
-  autocmd FocusLost silent! :wa
+    " Only have cursorline in active window.
+    au WinEnter * setlocal cursorline
+    au WinLeave * setlocal nocursorline
 
-  " When editing a file, always jump to the last cursor position.
-  " This must be after the uncompress commands.
-  autocmd BufReadPost *
-        \ if line("'\"") > 1 && line ("'\"") <= line("$") |
-        \   exe "normal! g`\"" |
-        \ endif
-end
+    " Only have color column to warn after 80 characters in insert.
+    if exists("&colorcolumn")
+      autocmd InsertEnter * set colorcolumn=81
+      autocmd InsertLeave * set colorcolumn=""
+    endif
 
-" Source the vimrc file after saving it
-if has("autocmd")
-  autocmd bufwritepost .vimrc source $MYVIMRC
+    " No formatting on o key newlines
+    autocmd BufNewFile,BufEnter * set formatoptions-=o
+
+    " No more complaining about untitled documents
+    autocmd FocusLost silent! :wa
+
+    " When editing a file, always jump to the last cursor position.
+    " This must be after the uncompress commands.
+    autocmd BufReadPost *
+          \ if line("'\"") > 1 && line ("'\"") <= line("$") |
+          \   exe "normal! g`\"" |
+          \ endif
+
+    " When vim is resized, automatically equalize split size.
+    au VimResized * exe "normal! \<c-w>="
+
+    " Source the vimrc file after saving it
+    autocmd bufwritepost .vimrc source $MYVIMRC
+
+    " Don't show trailing whitespace in insert mode.
+    au InsertEnter * :set listchars-=trail:⋅
+    au InsertLeave * :set listchars+=trail:⋅
+
+    " Leave insert mode after 15 seconds of inactivity.
+    au CursorHoldI * stopinsert
+    au InsertEnter * let updaterestore=&updatetime | set updatetime=15000
+    au InsertLeave * let &updatetime=updaterestore
+
+    " Autofold Ruby comments
+    au FileType ruby,eruby
+          \ set foldmethod=expr |
+          \ set foldexpr=getline(v:lnum)=~'^\\s*#' |
+          \ exe "normal zM``"
+  augroup END
 endif
 
 " ---------------
