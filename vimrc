@@ -1,5 +1,5 @@
 " =======================================
-" Who: Matt Furden
+" Who: Matt Furden @zolrath
 " What: Minimal vimrc with packages.
 " =======================================
 
@@ -264,7 +264,7 @@ endif
 " ----------------------------------------
 " Plugin Configuration
 " ----------------------------------------
-" For some reason the autoloading in /plugin wasnt working properly so:
+" Autoloading config files in /plugin wasnt working properly so:
 for f in split(glob('~/.vim/settings/*.vim'), '\n')
   exe 'source' f
 endfor

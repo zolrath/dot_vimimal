@@ -48,16 +48,16 @@ Bundle 'vim-ruby/vim-ruby'
 Bundle 'tpope/vim-endwise'
 
 " ------------------
+"   JSON
+" ------------------
+Bundle 'leshill/vim-json'
+
+" ------------------
 "   Clojure
 " ------------------
 " If you start using Clojure turn these on.
 " Bundle 'emezeske/paredit.vim'
 " Bundle 'VimClojure'
-
-" ------------------
-"   JSON
-" ------------------
-Bundle 'leshill/vim-json'
 
 " ------------------
 "   Misc
