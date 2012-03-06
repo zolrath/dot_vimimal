@@ -20,6 +20,10 @@ map Q @@
 " vmap Q gq
 " nmap Q gqap
 
+" Switch buffers with ,, and ,.
+nnoremap <silent> <leader>, :bp<CR>
+nnoremap <silent> <leader>. :bn<CR>
+
 " Auto-indent pastes according to surrounding code.
 nnoremap <leader>p p
 nnoremap <leader>P P
@@ -108,7 +112,7 @@ cnoremap <C-g> <C-c>
 "----------------------------
 " New Features
 " ---------------------------
-" Remap K to split line on current cursor position.
+" Remap K to split line to right of current cursor position.
 nnoremap K i<CR><Esc>`[
 
 " Make C-y get word above it in insert mode.
